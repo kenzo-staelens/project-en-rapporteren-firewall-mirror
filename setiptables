@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+iptables -X
+iptables -F
+iptables -I INPUT -d 10.0.2.0/24 -j NFQUEUE --queue-num 1
+iptables -I OUTPUT -s 10.0.2.0/24 -j NFQUEUE --queue-num 2
+iptables -I FORWARD -j NFQUEUE --queue-num 3
