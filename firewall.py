@@ -10,7 +10,7 @@ try:
     with open("config.json","r") as f:
         fdata = load(f)
         if("logging" in fdata):
-            logging=bool(fdata["logging"])
+            logging=(fdata["logging"]=="True")
         else:
             logging=False
         if("logfile" in fdata):
@@ -36,10 +36,10 @@ except FileNotFoundError:
     BlockPingAttacks = True
 '''
 
-def logger(direction, src, dst, name, pname, secpname):
+def logger(direction, src, dst, name, pname, secpname, extra=""):
     if(logging):
         with open(logfile,"a") as f:
-            f.write("{: >3} {: >15} -> {: >15}: {} {} {}\n".format(direction, src, dst, name, pname, secpname))
+            f.write("{: >3} {: >15} -> {: >15}: {} {} {} {}\n".format(direction, src, dst, name, pname, secpname, extra))
     else:
         print("{: >3} {: >15} -> {: >15}: {} {} {}".format(direction, src, dst, name, pname, secpname))
 
@@ -47,12 +47,14 @@ def firewallIn(pkt):
     #convert to scapy packet without ethernet frame
     sca = IP(pkt.get_payload())#scapy.layers.inet
     logger("in", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
+    print(sca.payload.payload)
     pkt.accept()
 
 def firewallOut(pkt):
     #convert to scapy packet without ethernet frame
     sca = IP(pkt.get_payload())#scapy.layers.inet
     logger("out", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
+    print(sca.payload.payload)
     pkt.accept()
 
 def firewallFwd(pkt):
@@ -81,7 +83,7 @@ def main():
 
     try:
         while(True):
-            sleep(1000)#less cpu intensive
+            sleep(1)#less cpu intensive
             #most cpu intensive task is starting multiprocess
     except:
         sleep(0.1)#give time for all threads to end

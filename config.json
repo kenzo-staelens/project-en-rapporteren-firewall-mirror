@@ -1,4 +1,4 @@
 {
-  "logging":"True",
+  "logging":"False",
   "logfile":"./logfile.log"
 }
