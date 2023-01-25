@@ -5,6 +5,11 @@ pip install netfilterqueue
 pip install scapy
 ```
 
+## forwarding aanzetten op linux machine
+```bash
+echo 1 >/proc/sys/net/ipv4/ip_forward
+```
+
 ## Config
 configs moeten moenteel aangepast worden in config.json, als nieuwe config parameters woren toegevoegd
 moeten deze in de eerste sectie (aangeduid met #import config) worden toegevoegd en default waarden ingesteld
