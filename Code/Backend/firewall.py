@@ -7,7 +7,7 @@ from json import load
 
 #import configs
 try:
-    with open("config.json","r") as f:
+    with open("../../VM/Config/config.json","r") as f:
         fdata = load(f)
         if("logging" in fdata):
             logging=(fdata["logging"]=="True")
