@@ -9,7 +9,7 @@ First of all make use of Issues, clearly state what needs to be done. The idea i
 
 **____Section Labels____**
 
-Administration labels : 
+~~Administration labels : ~~
 
 Labels labeled administration relate to administrative tasks. 
 
