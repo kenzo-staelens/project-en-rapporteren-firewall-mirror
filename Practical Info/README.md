@@ -13,10 +13,12 @@ First of all make use of Issues, clearly state what needs to be done. The idea i
 Labels labeled administration relate to administrative tasks. 
 
 Some parameters are included : 
-    - General (General administrative tasks);
-    - Review (Draft or Final files need to be reviewed);
-    - Draft (Draft works should always be refactored and reviewed before they are moved into the final folder);
-    - Final(These are the final works , these have already been refactored. If these are still be modified they should be reviewed again);
+-     General (General administrative tasks);
+-     Review (Draft or Final files need to be reviewed);
+-     Draft (Draft works should always be refactored and reviewed before they are moved into the final folder);
+-     Final(These are the final works , these have already been refactored. If these are still be modified they should be reviewed again);
+
+
 
 
 <h3>Development labels</h3>
