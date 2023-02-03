@@ -1,4 +1,4 @@
-````#Practical Info craeted by Vasseur Michaël 02/02/2023
+#Practical Info craeted by Vasseur Michaël 02/02/2023
 
 <h1>Brief announcement : Using GitLab Team-Firewall</h1>
 
@@ -14,10 +14,11 @@ Labels labeled administration relate to administrative tasks.
 
 Some parameters are included : 
 
-1.     General (General administrative tasks);
-2.     Review (Draft or Final files need to be reviewed);
-3.     Draft (Draft works should always be refactored and reviewed before they are moved into the final folder);
-4.     Final(These are the final works , these have already been refactored. If these are still be modified they should be reviewed again);
+1. General (General administrative tasks);
+1. Review (Draft or Final files need to be reviewed);
+1. Draft (Draft works should always be refactored and reviewed before they are moved into the final folder);
+1. Final(These are the final works , these have already been refactored. If these are still be modified they should be reviewed again);
+
 
 
 <h3>Development labels</h3>
