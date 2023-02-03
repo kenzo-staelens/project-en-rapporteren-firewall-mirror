@@ -64,7 +64,7 @@ Anything to do with the virtual machines. These could be configuration or log fi
 <h2>Recap</h2> 
 
 1. Folder documents contains only info that you looked up on the internet/book. 
-2. Folder Code contains only code?
+2. Folder Code contains only code.
 3. Folder Reports contains only technical reports.
 4. Folder VM contains only things related to the matrix (the Virtual-Machine).
 
