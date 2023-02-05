@@ -11,7 +11,7 @@ Within an issue always look at the Tasks! If a Task is only for yourself or is a
 
 Example of use: 
 
-In your Boards on gitlab there is an issue Read Practical Info , in it are tasks. Each has 1 task Read : Name . If you have read it you can set the task to closed . Do not move the issue to DONE ! Because then the issue will disappear for everyone. If everyone's task is closed then I will place this issue in DONE. DONE == CLOSED .
+In your Boards on gitlab there is an issue Read Practical Info , in it are tasks. Each has one task (Read : Name). If you have read it you can set the task to closed . Do not move the issue to DONE ! Because: then the issue will disappear for everyone. If everyone's task is closed then I will place this issue in DONE. DONE == CLOSED .
 
 <h2>Section Labels</h2>
 
