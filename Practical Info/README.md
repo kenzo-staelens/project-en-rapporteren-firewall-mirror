@@ -5,6 +5,13 @@
 For the proper functioning of this team, we still need to make some arrangements. Good agreements, make good colleagues.
 First of all make use of Issues, clearly state what needs to be done. The idea is not for everyone to just start assigning some issues to team members. This would only create chaos. You can, of course, assign them to yourself. You can also take an issue that you did not create. When you are done with your issue/task place it in the column Review::First. No issue should go straight to Done. This is to detect possible errors quickly. When you create an issue also use Labels (explained further below). An issue can also be done by several people as you can see at the beginning of this project where I gave everyone the task of looking up information (by a certain time). The time of the sprint (not the same as the time seen in your issue) can be seen in the Milestones. Be sure to consult : https://docs.gitlab.com/ or https://www.youtube.com for more stuff..
 
+<h2>Section Issues</h2>
+
+Within an issue always look at the Tasks! If a Task is only for yourself or is assigned to you then you should (in most cases) move this issue to the Review column (you can create an issue with the request for Review with review label).
+
+Example of use: 
+
+In your Boards on gitlab there is an issue Read Practical Info , in it are tasks. Each has 1 task Read : Name . If you have read it you can set the task to closed . Do not move the issue to DONE ! Because then the issue will disappear for everyone. If everyone's task is closed then I will place this issue in DONE. DONE == CLOSED .
 
 <h2>Section Labels</h2>
 
