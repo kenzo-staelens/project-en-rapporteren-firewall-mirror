@@ -1,0 +1,1 @@
+https://www.oreilly.com/library/view/building-google-cloud/9781838647438/c8f7da22-bd08-4c11-a0a8-732947725723.xhtml#:~:text=Each%20firewall%20rule%20is%20composed,protocol%20and%20ports%2C%20and%20priority.https://cloud.google.com/vpc/docs/firewalls
