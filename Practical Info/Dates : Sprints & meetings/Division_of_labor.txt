@@ -3,8 +3,9 @@ Who does what ? Write here by name what you are so interested in.
 Division of labor : 
 
 Kenzo :
-
-
+- programming (python, flask server)
+- review
+- Docs when needed
 **********************
 Jonas :
 
