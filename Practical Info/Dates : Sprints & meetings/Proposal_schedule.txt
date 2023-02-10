@@ -15,4 +15,7 @@ Agreements with Tom :
 3. Conversation after Sprint 3 : 
 4. Conversation after Sprint 4 : 
 
+proposed edit:
+sprint 1: framework server/client communication for frontend
+--kenzo
 
