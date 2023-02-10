@@ -14,7 +14,7 @@ Jonathan :
 
 
 **********************
-Michael :
+Michaël :
 
 - programming (python)
 - Documentation 
