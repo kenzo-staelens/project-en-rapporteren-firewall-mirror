@@ -9,7 +9,9 @@ Kenzo :
 **********************
 Jonas :
 
-
+- GUI
+- Review
+- Documentation Malware
 **********************
 Jonathan :
 
