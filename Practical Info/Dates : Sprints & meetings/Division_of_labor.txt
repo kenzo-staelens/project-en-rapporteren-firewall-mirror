@@ -14,7 +14,10 @@ Jonas :
 - Documentation Malware
 **********************
 Jonathan :
-
+- programming (python)
+- Documentation
+- back-end <-> front-end communication
+- review
 
 **********************
 Michaël :
