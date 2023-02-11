@@ -18,4 +18,5 @@ Agreements with Tom :
 proposed edit:
 sprint 1: framework server/client communication for frontend
 --kenzo
-
+sprint 1: Design frontend in Figma and add malware documentation
+--jonas
