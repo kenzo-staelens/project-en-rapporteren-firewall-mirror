@@ -20,3 +20,5 @@ sprint 1: framework server/client communication for frontend
 --kenzo
 sprint 1: Design frontend in Figma and add malware documentation
 --jonas
+sprint 1: High-level design of program(& functions)
+--jonathan
