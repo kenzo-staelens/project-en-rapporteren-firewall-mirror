@@ -1,0 +1,41 @@
+<html>
+<head></head>
+<body>
+<form>
+<!--value="*" zijn testgegevens, deze horen hier op het einde niet te staan!!!-->
+<label for="username">username</label><br>
+<input id="un" name="username" type="text" value="default"><br>
+<label for="password">password</label><br>
+<input id="pass" name="password" type="password" value="creds"><br>
+<button type="button" onclick="login()">login</button>
+</form>
+</body>
+<script>
+var host = window.location.host
+function login() {
+      var un = document.getElementById("un").value;
+      var pass = document.getElementById("pass").value;
+      var url = "/";
+	  console.log(url)
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          console.log(xhr.status);
+          console.log(xhr.responseText);
+		  var j = JSON.parse(xhr.responseText);
+		  if(xhr.status==200){
+			window.location.href ="?token="+j.token;
+		  }
+		  else{
+			console.log("unauthorized")/*omzetten naar tonen aan user*/
+		  }
+        }
+      };
+      var data = '{"username":"' + encodeURIComponent(un) + '","password":"' + encodeURIComponent(pass) + '"}';
+      xhr.send(data);
+    }
+</script>
+</html>
+
