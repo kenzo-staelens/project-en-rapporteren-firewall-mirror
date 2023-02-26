@@ -1,0 +1,21 @@
+Proposal schedule :
+
+Sprint 1 (16/02 - 01/03) : 
+
+- Framework server/client communication for frontend;
+- Design frontend in Figma and add malware documentation;
+- High-level design of program & functions (A block-diagram of the inner workings of the program with also diagrams for the bigger functions. This could help clear up what individual steps need to be taken).
+
+Sprint 2 (02/03 - 16/03): Not yet implemented. 
+Sprint 3 : Not yet implemented.
+Sprint 4 : Not yet implemented.
+
+Deadline software portion on Friday, May 5.
+
+Agreements with Tom : 
+
+1. Conversation after Sprint 1 (02/03). 
+2. Conversation after Sprint 2 (16/03).  
+3. Conversation after Sprint 3 : 
+4. Conversation after Sprint 4 : 
+
