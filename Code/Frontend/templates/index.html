@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+  <head></head>
+  <body>
+	zie tests in console <br>
+	<button onclick="xhrreq()">test</button><br>
+	<button onclick="login()">login</button>
+  </body>
+  <script>
+	var apitoken = "{{ apitoken }}";
+
+    function xhrreq() {
+      var url = "/api";
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          console.log(xhr.status);
+          console.log(xhr.responseText);
+		  var j = JSON.parse(xhr.responseText);
+		  console.log(j)
+        }
+      };
+      var data = '{"apitoken":"'+encodeURIComponent(apitoken)+'","setting":"value"}';
+      xhr.send(data);
+    }
+  </script>
+</html>
