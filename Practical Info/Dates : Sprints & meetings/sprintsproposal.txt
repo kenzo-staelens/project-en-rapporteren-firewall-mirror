@@ -3,6 +3,7 @@ sprint 2:
 VM :
 
 - ask VM's school! (1 server , 3 pc [all linux])
+- developing Man-in-The-Middle machine to decode encryption of HTTPS (Michaël)
 
 software :
 
@@ -12,7 +13,6 @@ software :
 
 - frontend login page (Jonathan)
 
-- developing Man-in-The-Middle machine to decode encryption of HTTPS (Michaël)
 
 Documentation:
 
