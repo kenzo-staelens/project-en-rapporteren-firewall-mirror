@@ -1,4 +1,19 @@
-Sprint 2: 
+sprint 2:
 
-Post your name here along with your proposal(s).
+VM :
 
+- ask VM's school! (1 server , 3 pc [all linux])
+
+software :
+
+- modules firewall (module for basic firewall rules)
+
+- frontend user interface figma (Jonas)
+
+- frontend login page 
+
+- developing Man-in-The-Middle machine to decode encryption of HTTPS
+
+Documentation:
+
+- processing documentation
