@@ -6,14 +6,14 @@ VM :
 
 software :
 
-- modules firewall (module for basic firewall rules)
+- modules firewall (module for basic firewall rules) (Kenzo)
 
 - frontend user interface figma (Jonas)
 
-- frontend login page 
+- frontend login page (Jonathan)
 
-- developing Man-in-The-Middle machine to decode encryption of HTTPS
+- developing Man-in-The-Middle machine to decode encryption of HTTPS (Michaël)
 
 Documentation:
 
-- processing documentation
+- processing documentation (Jonathan)
