@@ -1,4 +1,4 @@
 {
-  "logging":"False",
-  "logfile":"../Logs/firewall.log"
+  "logging":"True",
+  "logfile":"../../VM/Logs/firewall.log"
 }
