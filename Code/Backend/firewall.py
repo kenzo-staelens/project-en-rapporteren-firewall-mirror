@@ -40,6 +40,7 @@ def firewallChannel(direction):
             	accepted = modules[module].run(direction, sca)
             	if(not accepted):
             	    pkt.drop()
+            	    break
             pkt.accept()
         except Exception as e:
             print(e)
