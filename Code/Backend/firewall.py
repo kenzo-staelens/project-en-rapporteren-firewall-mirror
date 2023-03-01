@@ -4,6 +4,7 @@ from scapy.all import IP
 from multiprocessing import Process
 from time import sleep
 from json import load
+import moduleloader
 
 #import configs
 try:
@@ -16,25 +17,12 @@ try:
         if("logfile" in fdata):
             logfile=fdata["logfile"]
         else:
-            logfile="./logfile.log"
+            logfile="../../VM/Logs/logfile.log"
 except FileNotFoundError:
     print("file config.json found, using default settings")
     logging = False
 
-'''
-try:
-    y = None
-    with open("firewallrules.json","r") as f:
-        y = json.load(f)
-except FileNotFoundError:
-    print("firewallrules.json not found")
-    ListOfBannedIpAddr = []
-    ListOfBannedPorts = []
-    ListOfBannedPrefixes = []
-    TimeThreshold = 10 #sec
-    PacketThreshold = 100
-    BlockPingAttacks = True
-'''
+modules = moduleloader.getModules()
 
 def logger(direction, src, dst, name, pname, secpname, extra=""):
     if(logging):
@@ -43,25 +31,20 @@ def logger(direction, src, dst, name, pname, secpname, extra=""):
     else:
         print("{: >3} {: >15} -> {: >15}: {} {} {}".format(direction, src, dst, name, pname, secpname))
 
-def firewallIn(pkt):
-    #convert to scapy packet without ethernet frame
-    sca = IP(pkt.get_payload())#scapy.layers.inet
-    logger("in", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
-    print(sca.payload.payload)
-    pkt.accept()
-
-def firewallOut(pkt):
-    #convert to scapy packet without ethernet frame
-    sca = IP(pkt.get_payload())#scapy.layers.inet
-    logger("out", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
-    print(sca.payload.payload)
-    pkt.accept()
-
-def firewallFwd(pkt):
-    #convert to scapy packet without ethernet frame
-    sca = IP(pkt.get_payload())#scapy.layers.inet
-    logger("fwd", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
-    pkt.accept()
+def firewallChannel(direction):
+    def channel(pkt):
+        try:
+            sca = IP(pkt.get_payload())#scapy.layers.inet
+            logger(direction, sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
+            for module in modules:
+            	accepted = modules[module].run(direction, sca)
+            	if(not accepted):
+            	    pkt.drop()
+            pkt.accept()
+        except Exception as e:
+            print(e)
+    
+    return channel
 
 def threadStart(queue, func):
     print("starting queue {}".format(queue))
@@ -74,7 +57,7 @@ def threadStart(queue, func):
         nfqueue.unbind()
 
 def main():
-    processes = [(1,firewallIn),(2,firewallOut),(3,firewallFwd)]
+    processes = [(1,firewallChannel("in")),(2,firewallChannel("out")),(3,firewallChannel("fwd"))]
     
     for process in processes:
         proc = Process(target=threadStart, args=process)
