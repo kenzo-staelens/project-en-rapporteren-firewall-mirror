@@ -7,7 +7,7 @@ import random
 # applicatie herstarten na elke aanpassing, inclusief aanpassingen aan html/css/etc.
 
 # maak je eigen sleutels!!!
-# openssl req -x509 -newkey rsa:4096 -nodes -out fkaskcert.pem -keyout flaskkey.pem -days 365
+# openssl req -x509 -newkey rsa:4096 -nodes -out flaskcert.pem -keyout flaskkey.pem -days 365
 # of gebruik onderaan de adhoc versie
 keyfile = "flaskkey.pem"
 certfile ="flaskcert.pem"
@@ -49,6 +49,7 @@ def login():
         Token = request.args.get("token")
         if Token == None: # token is a one time use token for authentication
             return render_template("login.html")
+            Token = None
         elif Token!=token:
             return render_template("unauthorized.html")
         else:

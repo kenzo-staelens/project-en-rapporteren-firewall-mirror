@@ -22,7 +22,8 @@ except FileNotFoundError:
     print("file config.json found, using default settings")
     logging = False
 
-modules = moduleloader.getModules()
+L3_modules = moduleloader.getModules("Layer3")
+L4_modules = moduleloader.getModules("Layer4")
 
 def logger(direction, src, dst, name, pname, secpname, extra=""):
     if(logging):
