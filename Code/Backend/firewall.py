@@ -21,9 +21,9 @@ try:
         ignored_l3 = fdata["ignored_modules"]["Layer3"]
         ignored_l4 = fdata["ignored_modules"]["Layer4"]
         L3_modules = moduleloader.getModules("Layer3",ignored_l3)
-	L4_modules = moduleloader.getModules("Layer4",ignored_l4)
-	for module in L3_modules:
-		L3_modules[module].config(fdata)
+        L4_modules = moduleloader.getModules("Layer4",ignored_l4)
+        for module in L3_modules:
+                L3_modules[module].config(fdata)
 except FileNotFoundError:
     print("file config.json found, using default settings")
     logging = False
@@ -45,10 +45,10 @@ def firewallChannel(direction):
             sca = IP(pkt.get_payload())#scapy.layers.inet
             logger(direction, sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
             for module in L3_modules: #for key in dictionary
-            	accepted = L3_modules[module].run(direction, sca)
-            	if(not accepted):
-            	    pkt.drop()
-            	    break
+                accepted = L3_modules[module].run(direction, sca)
+                if(not accepted):
+                    pkt.drop()
+                    break
             pkt.accept()
         except Exception as e:
             print(e)
