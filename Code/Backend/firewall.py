@@ -18,14 +18,19 @@ try:
             logfile=fdata["logfile"]
         else:
             logfile="../../VM/Logs/logfile.log"
-        ignored_l3 = []
-        ignored_l4 = []
+        ignored_l3 = fdata["ignored_modules"]["Layer3"]
+        ignored_l4 = fdata["ignored_modules"]["Layer4"]
+        L3_modules = moduleloader.getModules("Layer3",ignored_l3)
+	L4_modules = moduleloader.getModules("Layer4",ignored_l4)
+	for module in L3_modules:
+		L3_modules[module].config(fdata)
 except FileNotFoundError:
     print("file config.json found, using default settings")
     logging = False
+    L3_modules = {}
+    L3_modules = {}
 
-L3_modules = moduleloader.getModules("Layer3",ignored_l3)
-L4_modules = moduleloader.getModules("Layer4",ignored_l4)
+
 
 def logger(direction, src, dst, name, pname, secpname, extra=""):
     if(logging):

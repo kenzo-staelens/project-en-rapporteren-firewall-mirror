@@ -1,4 +1,9 @@
 {
   "logging":"True",
-  "logfile":"../../VM/Logs/firewall.log"
+  "logfile":"../../VM/Logs/firewall.log",
+  "ignored_modules":{
+  	"Layer3":["example_module","__pycache__"],
+  	"Layer4":["__pycache__"]
+  },
+  "firewall_module_path":"modules/Layer3/firewallrules"
 }
