@@ -1,2 +1,2 @@
 #!/usr/bin/bash
-../firewall.py &
+./firewall.py &

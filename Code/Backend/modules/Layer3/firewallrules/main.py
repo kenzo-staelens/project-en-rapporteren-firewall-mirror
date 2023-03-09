@@ -21,17 +21,34 @@ def config(jsonconfig):
 def run(direction="ingress",pkt=None):
 	query="WITH filteredTable AS (SELECT * FROM firewallrules WHERE direction=? and src_ip=?&src_mask and dst_ip=?&dst_mask and (protocol=? or protocol is null) and port_start<=? and port_end>=?) SELECT * FROM filteredTable WHERE priority=(SELECT MIN(priority) FROM filteredTable)"
 	#get packet parameters ip src, ip dst, protocol name, target port
-	ip_src = "0.0.0.0"
-	ip_dst = "0.0.0.0"
-	protocol = "ssh"
-	port=22
+	'''
+	print(f"src: {pkt.src}")
+	print(f"dst: {pkt.dst}")
+	print(f"name: {pkt._name}")
+	print(f"proto: {pkt.get_field('proto').i2s[pkt.proto].upper()}")
+	try:
+		print(f"port: {pkt.payload.dport}")
+	except:
+		print("no port")
+	pkt.show2()
+	print("---")
+	print("---")
+	'''
+	ip_src = pkt.src
+	ip_dst = pkt.dst
+	protocol = pkt.get_field('proto').i2s[pkt.proto].upper()
+	try:
+		port=pkt.payload.dport
+	except Exception as ex:
+		port = 0 #gebruik port 0 voor packets zonder poort
+	
 	queryparams = (
 		direction,
 		ipparser.parse_to_int(ip_src),
 		ipparser.parse_to_int(ip_dst),
 		protocol,
 		port, port
-	) #port x2 want port range test
+	) #port x2 omdat port range test op zelfde cijfer test
 	try:
 		matchedrules = con().execute(query, queryparams)
 		for rule in matchedrules:
