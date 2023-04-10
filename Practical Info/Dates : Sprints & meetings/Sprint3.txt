@@ -1,0 +1,6 @@
+Sprint 3
+
+1. Jonathan & Kenzo : Develop frontend
+2. Kenzo : Linking firewall to databases.
+3. Michaël : Setting up VM environment
+4. Jonas & Michaël : Improve and complete documentation.
