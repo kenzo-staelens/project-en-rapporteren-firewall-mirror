@@ -5,7 +5,7 @@ window.onload = async function() {
 };
 
 async function getTrafficData() {
-    var trafficData = await fetch(`../../Testdata/traffic.json`);
+    var trafficData = await fetch(`../Testdata/traffic.json`);
 	var trafficJson = await trafficData.json();
 	return trafficJson;
 }

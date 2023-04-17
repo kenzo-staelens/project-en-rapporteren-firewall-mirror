@@ -54,7 +54,7 @@ def login():
         elif Token!=token:
             return render_template("unauthorized.html")
         else:
-            return render_template("index.html",apitoken=apitoken)
+            return render_template("index.html",apitoken=config_object[0]["apikey"])
 
     
 #used error codes:
@@ -63,9 +63,9 @@ def login():
 #401: unauthorized -> invalid auth token
 #500: internal server error -> something else failed
 def ProcessTheData(jsonData):
-    global apitoken
+    #global apitoken
     try:
-        if(jsonData['apitoken']!=apitoken):
+        if(jsonData['apitoken']!=config_object[0]["apikey"]):
             return 401
         #process here
         return 200

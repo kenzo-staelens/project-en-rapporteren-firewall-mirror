@@ -8,6 +8,7 @@ from json import load
 def main():
     config={}
     try:
+        #backend
         with open("../VM/Config/config.json","r") as f:
             fdata = load(f)
             #logging settings
@@ -32,12 +33,18 @@ def main():
                     del L3_modules[module_name]
             config["L3_modules"] = L3_modules
             config["L4_modules"] = L4_modules
+            
+            #frontend
+            config["apikey"]=fdata["apikey"]
     except FileNotFoundError:
-        print("file config.json not found, using default settings")
+        print("file config.json not found or failed reading values, using default settings")
         config["logging"] = False
         config["L3_modules"] = {}
         config["L4_modules"] = {}
-
+        
+        #frontend
+        config["apikey"]="259355acc5f86bbd0f9a9f708209a15595cafcecd8fb79c00b061d3456f64ba8"
+        
     print("starting backend")
     backendThread = Thread(target=backend.main,args=(config,))
     backendThread.daemon = True
