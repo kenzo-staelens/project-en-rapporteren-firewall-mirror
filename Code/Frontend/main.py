@@ -2,15 +2,16 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3 as sql
 import json
-import models
 import random
 # applicatie herstarten na elke aanpassing, inclusief aanpassingen aan html/css/etc.
+
+config_object=[None]#issues met concurrency en shared references
 
 # maak je eigen sleutels!!!
 # openssl req -x509 -newkey rsa:4096 -nodes -out flaskcert.pem -keyout flaskkey.pem -days 365
 # of gebruik onderaan de adhoc versie
-keyfile = "flaskkey.pem"
-certfile ="flaskcert.pem"
+keyfile = "Frontend/flaskkey.pem"
+certfile ="Frontend/flaskcert.pem"
 
 print(keyfile)
 
@@ -37,7 +38,7 @@ def login():
         username = info.get('username', 'guest')
         password = info.get('password', '')
         user=None
-        user = models.retrieveUsers(username, password) # get user from query
+        user = retrieveUsers(username, password) # get user from query
         if user: #als user bestaat
             #return new one time login token
             token=''.join(random.choice('0123456789abcdef') for n in range(64))
@@ -79,7 +80,12 @@ def api():
     else:
         return json.dumps({'success':False}), httpStatus, {'ContentType':'application/json'}
 
+def main(config):
+    config_object[0]=config
+    app.run(host="0.0.0.0",port=8080, ssl_context=(certfile,keyfile))
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080, ssl_context=(certfile,keyfile))
+    main(None)
+    #app.run(host='0.0.0.0', port=8080, ssl_context=(certfile,keyfile))
     #app.run(host="0.0.0.0",port=8080,ssl_context='adhoc')
 

@@ -3,38 +3,13 @@ from netfilterqueue import NetfilterQueue
 from scapy.all import IP
 from multiprocessing import Process
 from time import sleep
-from json import load
-import moduleloader
+import Backend.moduleloader as moduleloader
 
-#import configs
-try:
-    with open("../../VM/Config/config.json","r") as f:
-        fdata = load(f)
-        if("logging" in fdata):
-            logging=(fdata["logging"]=="True")
-        else:
-            logging=False
-        if("logfile" in fdata):
-            logfile=fdata["logfile"]
-        else:
-            logfile="../../VM/Logs/logfile.log"
-        ignored_l3 = fdata["ignored_modules"]["Layer3"]
-        ignored_l4 = fdata["ignored_modules"]["Layer4"]
-        L3_modules = moduleloader.getModules("Layer3",ignored_l3)
-        L4_modules = moduleloader.getModules("Layer4",ignored_l4)
-        for module in L3_modules:
-                L3_modules[module].config(fdata)
-except FileNotFoundError:
-    print("file config.json found, using default settings")
-    logging = False
-    L3_modules = {}
-    L3_modules = {}
-
-
+config_object = [None] #for "pointer" purposes, concurrency in python suckt
 
 def logger(direction, src, dst, name, pname, secpname, extra=""):
-    if(logging):
-        with open(logfile,"a") as f:
+    if(config_object[0]["logging"]):
+        with open(config_object[0]["logfile"],"a") as f:
             f.write("{: >3} {: >15} -> {: >15}: {} {} {} {}\n".format(direction, src, dst, name, pname, secpname, extra))
     else:
         print("{: >3} {: >15} -> {: >15}: {} {} {}".format(direction, src, dst, name, pname, secpname))
@@ -44,8 +19,12 @@ def firewallChannel(direction):
         try:
             sca = IP(pkt.get_payload())#scapy.layers.inet
             logger(direction, sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
-            for module in L3_modules: #for key in dictionary
-                accepted = L3_modules[module].run(direction, sca)
+            #
+            for module in config_object[0]["L3_modules"]: #for key in dictionary
+                if not config_object[0]["L3_modules"][module][1]:
+                    #guard clause, module is marked disabled
+                    continue
+                accepted = config_object[0]["L3_modules"][module][0].run(direction, sca)
                 if(not accepted):
                     pkt.drop()
                     break
@@ -65,7 +44,9 @@ def threadStart(queue, func):
         print("nfqueue {} stopped".format(queue))
         nfqueue.unbind()
 
-def main():
+def main(config):
+    config_object[0] = config
+    
     processes = [(1,firewallChannel("in")),(2,firewallChannel("out")),(3,firewallChannel("fwd"))]
     
     for process in processes:
@@ -82,4 +63,4 @@ def main():
     print("end of firewall process")
 
 if __name__=="__main__":
-    main()
+    main(None)
