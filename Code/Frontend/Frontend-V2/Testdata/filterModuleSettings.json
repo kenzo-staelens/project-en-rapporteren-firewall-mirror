@@ -1,0 +1,38 @@
+{
+    "name" : "filter",
+    "displayName" : "Filter",
+    "data" : [
+        {
+            "name": "Enable",
+            "type": "bool",
+            "data": true
+        },
+        {
+            "name": "Default behaviour",
+            "type": "dropdown",
+            "data": ["allow","deny"]
+        },
+        {
+            "name": "Filters",
+            "type": "table",
+            "data": [
+                {
+                    "behavior": "allow",
+                    "source-IP": "any",
+                    "source-port": "any",
+                    "destination-IP": "192.168.1.1",
+                    "destination-port": "443",
+                    "protocol": "HTTP-GET"
+                },
+                {
+                    "behavior": "allow",
+                    "source-IP": "192.168.1.1",
+                    "source-port": "443",
+                    "destination-IP": "192.168.1.1",
+                    "destination-port": "any",
+                    "protocol": "HTTP-POST"
+                }
+            ]
+        }
+    ]
+}

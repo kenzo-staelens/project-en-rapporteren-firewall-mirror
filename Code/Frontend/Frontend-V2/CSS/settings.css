@@ -1,0 +1,256 @@
+/**SETTINGS**/
+/**Layout van orange router config gepikt**/
+
+.settingsContainer{
+    display: flex;
+    width: 1200px;
+}
+
+.settingsContainer>#moduleList {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    margin-top: 0rem;
+    padding-top: 2rem;
+    padding-right: 1rem;
+    flex-grow: 1;
+    font-size: 22px;
+    font-weight: bold;
+}
+.settingsContainer #moduleList li {
+    margin-bottom: 2rem;
+    width: fit-content;
+}
+.settingsContainer #moduleList li.active {
+    border-bottom: 3px solid;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1.7rem;
+}
+.settingsContainer #moduleList li:hover {
+    color: var(--active-text-color);
+    cursor: pointer;
+}
+
+
+.settingsContainer .moduleSettings {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--accent-color);
+    flex-grow: 4;
+    padding-left: 4rem;
+    padding-top: 2rem;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    border: 2px solid #444;
+}
+thead {
+    background-color: var(--header-color);
+    border: 3px solid #444;
+}
+
+th:not(:last-of-type) {
+    border-right: 3px solid #444;
+}
+
+tbody>tr {
+    background-color: var(--background-color);
+}
+tr:nth-child(2n) {
+    background-color: var(--background-color-darker);
+}
+
+td:not(:last-of-type) {
+    border-right: 2px solid #444;
+}
+
+/**SLIDERS**/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 37px;
+    height: 22px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider { /**SLOT**/
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: whitesmoke;
+    -webkit-transition: .2s;
+    transition: .2s;
+    border: 2px solid black;
+  }
+  
+  .slider:before { /**CIRCLE**/
+    position: absolute;
+    content: "";
+    height: 1rem;
+    width: 1rem;
+    left: 1px;
+    top: 1px;
+    background-color: white;
+    -webkit-transition: .2s;
+    transition: .2s;
+
+  }
+  
+  input:checked + .slider {
+    background-color: var(--text-color);
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px var(--text-color);
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(1rem);
+    -ms-transform: translateX(1rem);
+    transform: translateX(1rem);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 2rem;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  /**source: https://www.w3schools.com/howto/howto_css_switch.asp**/
+
+  /**PLUS**/
+  .button_plus {
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: white;
+    cursor: pointer;
+    border: 2px solid var(--text-color);
+  }
+  
+  .button_plus:after {
+    content: '';
+    position: absolute;
+    transform: translate(-50%, -50%);
+    height: 2px;
+    width: 50%;
+    background: var(--text-color);
+    top: 50%;
+    left: 50%;
+  }
+  
+  :not(.minus).button_plus:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--text-color);
+    height: 50%;
+    width: 2px;
+  }
+  
+  .button_plus:hover:before,
+  .button_plus:hover:after {
+    background: white;
+    transition: 0.2s;
+  }
+  
+  .button_plus:hover {
+    background-color: var(--text-color);
+    transition: 0.1s;
+  }
+
+/**https://alvarotrigo.com/blog/toggle-switch-css/**/
+.toggleButton {
+    position: relative;
+    width: 78px;
+    height: 36px;
+    margin-top: 0.5rem ;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.toggleButton .checkbox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.toggleButton .knobs,
+.toggleButton .layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.toggleButton .knobs:before,
+.toggleButton .knobs:after,
+.toggleButton .knobs span {
+    position: absolute;
+    top: 4px;
+    width: 20px;
+    height: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
+    padding: 9px 4px;
+    border-radius: 4px;
+    transition: 0.2s ease all;
+}
+
+.toggleButton .knobs:before,
+.toggleButton .knobs:after {
+    color: var(--text-color);
+    z-index: 1;
+}
+
+.toggleButton .knobs:before {
+    content: "YES";
+    left: 4px;
+}
+
+.toggleButton .knobs:after {
+    content: "NO";
+    right: 6px;
+}
+
+.toggleButton .knobs span {
+    width: 25px;
+    left: 40px;
+    background-color: #03a9f4;
+    z-index: 2;
+}
+
+.toggleButton .checkbox:checked + .knobs span {
+    left: 4px;
+    background-color: #f44336;
+}
+
+.toggleButton .checkbox:checked ~ .layer {
+    background-color: #fac3c3;
+}
+.toggleButton .checkbox ~ .layer {
+    background-color: var(--button-color);
+}

@@ -1,0 +1,28 @@
+{ 
+    "data" : [
+        {
+            "name" : "general",
+            "displayName" : "General Settings"
+        },
+        {
+            "name" : "filter",
+            "displayName" : "Filter"
+        },
+        {
+            "name" : "geoFilter",
+            "displayName" : "Geo Filter"
+         },
+         {
+            "name" : "module4",
+            "displayName" : "Module 4"
+         },
+         {
+            "name" : "module5",
+            "displayName" : "Module 5"
+         },
+         {
+            "name" : "module6",
+            "displayName" : "Module 6"
+         }
+    ]
+}
