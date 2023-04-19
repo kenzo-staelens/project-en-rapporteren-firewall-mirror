@@ -24,21 +24,24 @@ def main(args):
             #module loading
             ignored_l3 = fdata["ignored_modules"]["Layer3"]
             ignored_l4 = fdata["ignored_modules"]["Layer4"]
-            L3_modules = moduleloader.getModules("Backend/Layer3",ignored_l3)
-            L4_modules = moduleloader.getModules("Backend/Layer4",ignored_l4)
-            for module_name in L3_modules:
+            L3_modules = moduleloader.getModules("Layer3",ignored_l3)
+            L4_modules = moduleloader.getModules("Layer4",ignored_l4)
+            for module_name in [key for key in L3_modules]:
+                #mitigates error dictionary changed size during iteration
                 try:
                     L3_modules[module_name][0].config(fdata)
-                except:
+                except Exception as e:
                     print(f"could not load module {module_name}")
+                    print(e)
                     del L3_modules[module_name]
             config["L3_modules"] = L3_modules
             config["L4_modules"] = L4_modules
             
             #frontend
             config["apikey"]=fdata["apikey"]
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         print("file config.json not found or failed reading values, using default settings")
+        print(e)
         config["logging"] = False
         config["L3_modules"] = {}
         config["L4_modules"] = {}

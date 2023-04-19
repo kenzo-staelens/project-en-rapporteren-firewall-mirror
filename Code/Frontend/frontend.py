@@ -110,7 +110,6 @@ def ProcessTheData(jsonData):
     except:
         return 500
     
-@app.get("/api/<request_type>")
 @app.post("/api")
 def api():
     httpStatus = ProcessTheData(request.json) 
@@ -120,6 +119,18 @@ def api():
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     else:
         return json.dumps({'success':False}), httpStatus, {'ContentType':'application/json'}
+
+@app.get("/api/<endpoint>")
+def apiget(endpoint):
+    print(config_object[0])
+    if endpoint == "InstalledModules":
+        response = {"data":[]}
+        for key in config_object[0]["L3_modules"]:
+            response["data"].append({"name":f"L3-{key}", "displayName":f"L3-{key}"})
+        for key in config_object[0]["L4_modules"]:
+            response["data"].append({"name":f"L4-{key}", "displayName":f"L4-{key}"})
+        return json.dumps(response), 200, {'ContentType':'application/json'}
+    return json.dumps({}),404, {'ContentType':'application/json'}
 
 def main(config):
     config_object[0]=config

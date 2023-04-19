@@ -3,7 +3,7 @@ window.onload = function() {
 };
 
 async function fillModulesList() {
-    const moduleNames = await getNames("installedModules");
+    const moduleNames = await getNames("InstalledModules");
 	moduleNames.forEach((element) => {
 		var moduleList = document.getElementById('moduleList');
 		var moduleToAdd = document.createElement('li');
@@ -18,7 +18,7 @@ async function fillModulesList() {
 async function getNames(resource) {
     var names = [];
     try {
-        const response = await fetch(`../../Testdata/${resource}.json`)
+        const response = await fetch(`api/${resource}`)
         const json = await response.json()
         json.data.forEach(item => {
             names.push( 
@@ -235,4 +235,4 @@ function removeRowButton(caller) {
 function createPostRequest() {
     const settingsForm = document.getElementById("moduleSettingsForm");
     var postRequestContent = "";
-}
+}
