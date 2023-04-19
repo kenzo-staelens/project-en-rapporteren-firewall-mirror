@@ -12,7 +12,7 @@ async function fillModulesList() {
         moduleToAdd.innerText = element.displayName ? element.displayName : element.name;
 		moduleList.appendChild(moduleToAdd);
 	});
-	console.log('filled modules: ' + moduleNames.toString());
+	console.log('filled modules: ' + JSON.stringify(moduleNames));
 }
 
 async function getNames(resource) {
@@ -55,7 +55,7 @@ function getSelectedModuleName() {
 async function getModuleFromServer(moduleName) {
 	//Get request for specific module
     try {
-        const response = await fetch(`../../Testdata/${moduleName}ModuleSettings.json`)
+        const response = await fetch(`api/settings/${moduleName}`)
         if(response.status !== 200) {
             console.error("error retrieving data: " + error);
             response = `{ "name" : "error ${response.status} \nThere was a problem retrieving the data"}`;
@@ -70,19 +70,19 @@ async function getModuleFromServer(moduleName) {
 
 async function fillModuleSettings(moduleName) {
     var selectedModule = await getModuleFromServer(moduleName);
-    var settingsForm = document.getElementById("moduleSettingsForm");
+    var settingsForm = document.getElementById("moduleSettings");
     settingsForm.innerHTML = "";
 
     var header = document.createElement("div");
     header.innerHTML = 
-    `<h2>${selectedModule.displayName}</h2>
-`;
+    `<h2>${selectedModule.displayName}</h2>`;
     settingsForm.appendChild(header);
 
     var moduleSettings = selectedModule.data;
     if(moduleSettings == null) return;
     moduleSettings.forEach(setting => {
         createSettingDiv(setting, settingsForm);
+        
     });
 }
 
@@ -233,6 +233,6 @@ function removeRowButton(caller) {
 
 
 function createPostRequest() {
-    const settingsForm = document.getElementById("moduleSettingsForm");
+    const settingsForm = document.getElementById("moduleSettings");
     var postRequestContent = "";
 }

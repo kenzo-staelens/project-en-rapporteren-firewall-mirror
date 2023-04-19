@@ -21,12 +21,12 @@ apitoken = "259355acc5f86bbd0f9a9f708209a15595cafcecd8fb79c00b061d3456f64ba8"
 # apitoken hoort nrml in een dotenv bestand, nrml zou ik ook iets meer security willen, dit is gewoon omdat dan tests kunnen gedaan worden met de api zonder veel moeite
 
 def retrieveUsers(username, password): #database query login details
-	con = sql.connect("Frontend/database.db")
-	cur = con.cursor()
-	cur.execute("SELECT username, password FROM users where username=? and password=?",(username, password))
-	user = cur.fetchone()
-	con.close()
-	return user
+    con = sql.connect("Frontend/database.db")
+    cur = con.cursor()
+    cur.execute("SELECT username, password FROM users where username=? and password=?",(username, password))
+    user = cur.fetchone()
+    con.close()
+    return user
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
@@ -75,11 +75,11 @@ def dashboard():
     global token
     Token = request.args.get("token")
     if Token == None:
-    	return redirect(url_for("login"), code=302)
+        return redirect(url_for("login"), code=302)
     elif Token!=token:
-    	return redirect(url_for("unauthorized"), code=302)
+        return redirect(url_for("unauthorized"), code=302)
     else:
-    	return render_template("dashboard.html", apitoken=config_object[0]["apikey"], logintoken=token)
+        return render_template("dashboard.html", apitoken=config_object[0]["apikey"], logintoken=token)
 
 @app.get("/settings")
 def settings():
@@ -122,15 +122,50 @@ def api():
 
 @app.get("/api/<endpoint>")
 def apiget(endpoint):
-    print(config_object[0])
     if endpoint == "InstalledModules":
         response = {"data":[]}
         for key in config_object[0]["L3_modules"]:
-            response["data"].append({"name":f"L3-{key}", "displayName":f"L3-{key}"})
+            response["data"].append({"name":f"L3-{key}", "displayName":f"{key}"})
         for key in config_object[0]["L4_modules"]:
-            response["data"].append({"name":f"L4-{key}", "displayName":f"L4-{key}"})
+            response["data"].append({"name":f"L4-{key}", "displayName":f"{key}"})
         return json.dumps(response), 200, {'ContentType':'application/json'}
+    
+    if endpoint == "Traffic":
+        trafficTemplate = {
+            "name" : "traffic",
+            "displayName" : "Traffic captured",
+            "data" : [{ "name": "All traffic", "type": "table", "data": [] }]
+        }
+        
+        with open(config_object[0]["logfile"],"r") as f:
+            logentries = []
+            entrynum=1
+            for line in f.readlines():
+                logentries.append({"no.":entrynum, "entry": line})
+                entrynum+=1
+        trafficdata["data"][0]["data"]=logentries
+        return json.dumps(trafficdata),200, {'ContentType':'application/json'}
     return json.dumps({}),404, {'ContentType':'application/json'}
+
+
+
+@app.get("/api/settings/<module>")
+def apigetsettings(module):
+    modulename = module[3:]
+    layer = f"{module[:2]}_modules"
+    table = config_object[0][layer][modulename][0].getconfig()
+    retobj = {"name":"module", "displayName":modulename,"data":[
+            {"name":"Enable", "desc":"enables module", "type":"bool","data":True}
+        ]
+    }
+    if len(table)>0:
+        retobj["data"].append({
+            "name":"rules",
+            "displayName":"rules",
+            "type":"table","data":table
+        })
+    
+    return json.dumps(retobj),200,{'ContentType':'application/json'}
 
 def main(config):
     config_object[0]=config

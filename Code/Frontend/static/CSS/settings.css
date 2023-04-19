@@ -3,7 +3,7 @@
 
 .settingsContainer{
     display: flex;
-    width: 1200px;
+    min-width: 1200px;
 }
 
 .settingsContainer>#moduleList {
@@ -34,6 +34,7 @@
 
 .settingsContainer .moduleSettings {
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
     background-color: var(--accent-color);
     flex-grow: 4;
@@ -253,4 +254,4 @@ td:not(:last-of-type) {
 }
 .toggleButton .checkbox ~ .layer {
     background-color: var(--button-color);
-}
+}

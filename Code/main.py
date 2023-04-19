@@ -48,6 +48,7 @@ def main(args):
         
         #frontend
         config["apikey"]="259355acc5f86bbd0f9a9f708209a15595cafcecd8fb79c00b061d3456f64ba8"
+        
     if(args.firewall):
         print("starting backend")
         backendThread = Thread(target=backend.main,args=(config,))
