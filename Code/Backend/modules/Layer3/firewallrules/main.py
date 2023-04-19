@@ -38,8 +38,6 @@ def getconfig():
 		rules = extracon().execute("select * from firewallrules").fetchall()
 	
 	try:
-		#rules = con().execute("select * from firewallrules").fetchall()
-		print(rules)
 		for rule in rules:
 			configresult.append({
 				"behaviour":"allow" if rule[2] else "deny",
@@ -88,7 +86,6 @@ def run(direction="ingress",pkt=None):
 	try:
 		matchedrules = con().execute(query, queryparams)
 		for rule in matchedrules:
-			print(rule)
 			if(rule[2]==0):
 				return False
 		return True

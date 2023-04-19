@@ -68,7 +68,13 @@ def login():
 @app.get('/home')
 def home():
     global token
-    return render_template("home.html", logintoken=token)
+    Token = request.args.get("token")
+    if Token == None:
+        return redirect(url_for("login"), code=302)
+    elif Token!=token:
+        return redirect(url_for("unauthorized"), code=302)
+    else:
+        return render_template("home.html", logintoken=token)
 
 @app.get('/dashboard')
 def dashboard():
@@ -84,12 +90,24 @@ def dashboard():
 @app.get("/settings")
 def settings():
     global token
-    return render_template("settings.html", logintoken=token)
+    Token = request.args.get("token")
+    if Token == None:
+        return redirect(url_for("login"), code=302)
+    elif Token!=token:
+        return redirect(url_for("unauthorized"), code=302)
+    else:
+        return render_template("settings.html", logintoken=token)
     
 @app.get("/traffic")
 def traffic():
     global token
-    return render_template("traffic.html", logintoken=token)
+    Token = request.args.get("token")
+    if Token == None:
+        return redirect(url_for("login"), code=302)
+    elif Token!=token:
+        return redirect(url_for("unauthorized"), code=302)
+    else:
+        return render_template("traffic.html", logintoken=token)
 
 @app.get('/unauthorized')
 def unauthorized():
@@ -143,8 +161,8 @@ def apiget(endpoint):
             for line in f.readlines():
                 logentries.append({"no.":entrynum, "entry": line})
                 entrynum+=1
-        trafficdata["data"][0]["data"]=logentries
-        return json.dumps(trafficdata),200, {'ContentType':'application/json'}
+        trafficTemplate["data"][0]["data"]=logentries
+        return json.dumps(trafficTemplate),200, {'ContentType':'application/json'}
     return json.dumps({}),404, {'ContentType':'application/json'}
 
 
