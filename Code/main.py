@@ -1,11 +1,12 @@
 from Backend import firewall as backend
 from Backend import moduleloader
-from Frontend import main as frontend
+from Frontend import frontend
 from threading import Thread
 from time import sleep
 from json import load
+import argparse
 
-def main():
+def main(args):
     config={}
     try:
         #backend
@@ -44,17 +45,18 @@ def main():
         
         #frontend
         config["apikey"]="259355acc5f86bbd0f9a9f708209a15595cafcecd8fb79c00b061d3456f64ba8"
-        
-    print("starting backend")
-    backendThread = Thread(target=backend.main,args=(config,))
-    backendThread.daemon = True
-    backendThread.start()
+    if(args.firewall):
+        print("starting backend")
+        backendThread = Thread(target=backend.main,args=(config,))
+        backendThread.daemon = True
+        backendThread.start()
+        sleep(5)#wait for backend to fully start
     
-    sleep(5)#wait for backend to fully start
-    print("starting frontend")
-    frontendThread = Thread(target=frontend.main,args=(config,))
-    frontendThread.daemon = True
-    frontendThread.start()
+    if(args.site):
+        print("starting frontend")
+        frontendThread = Thread(target=frontend.main,args=(config,))
+        frontendThread.daemon = True
+        frontendThread.start()
     try:
         while True:
             pass
@@ -63,4 +65,9 @@ def main():
     
     
 if __name__ =="__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f","--firewall", action='store_true')
+    parser.add_argument("-s","--site", action='store_true')
+    
+    args = parser.parse_args()
+    main(args)
