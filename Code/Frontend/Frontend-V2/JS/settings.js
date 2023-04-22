@@ -88,7 +88,7 @@ async function fillModuleSettings(moduleName) {
 
     var footer = document.createElement("footer")
     footer.innerHTML =
-    `<button class="bigButton" type="button" onclick=createPostData()>Save</button>
+    `<button class="bigButton" type="button" onclick=saveSettings()>Save</button>
 `;
     settingsForm.appendChild(footer);
 }
@@ -119,7 +119,8 @@ function createSettingDiv(setting, parent) {
 //creates the containing div and title+description of a setting
 function createEmptySetting(setting) {
     var settingDiv = document.createElement("div");
-    settingDiv.setAttribute("class", setting.name + "Setting");
+    settingDiv.setAttribute("class", `${setting.type}`);
+    settingDiv.setAttribute("data-name", setting.name)
     
     var label = document.createElement("h3");
     label.innerText = setting.displayName ? setting.displayName : setting.name;
@@ -173,7 +174,7 @@ function createTableSettingDiv(setting) {
 `;
         columns.forEach(column => {
             tablerow += 
-`            <td><input type="text" name="${setting.name}_${rowIndex}_${column}" value="${row[column]}" /></td>
+`            <td><input type="text" name="${setting.name}_1_${column}" value="${row[column]}" /></td>
 `;
         });
         tablerow += 
@@ -239,43 +240,107 @@ function removeRowButton(caller) {
     rows.item(rows.length - 1).remove();
 }
 
+//controller for extracting data and filtering away unchanged data
 async function createPostData() {
-    var rawFormData = new FormData(document.getElementById("moduleSettings"));
-    console.log(rawFormData);
     const existingSettings = await getModuleFromServer(getSelectedModuleName())
     console.log(existingSettings);
-    //var existingKeys = getKeysFromSettings(existingSettings);
-    //console.log(existingKeys)
-    var formData = {};
-    rawFormData.forEach(entry => {
-        //convert to good JSON
-        
-    })
-
+    var cleanData = extractData(document.getElementById("moduleSettings"), existingSettings);
+    return cleanData;
 }
 
-/*function getKeysFromSettings(settings) {
-    settings.data.forEach(x => {
-        var keys = [];
+//extracts the data from the form and removes settings that occur in the second param
+function extractData(form, existingSettings) {
+    const divs = form.getElementsByTagName("div");
+    var data = []; 
+    for(var i = 0; i < divs.length; i++){
+        var settingData;
+        var div = divs[i];
+        if(div.classList.contains("bool")) {
+            settingData = extractDataFromBool(div);
+            cleanData = settingData;
+        } else if(div.classList.contains("dropdown")) {
+            settingData = extractDataFromDropdown(div);
+            cleanData = settingData;
+        } else if(div.classList.contains("table")) {
+            settingData = extractDataFromTable(div);
+            cleanData = removeDuplicateDataFromTableExtract(settingData, existingSettings);
+        } else if(div.classList.contains("text")) {
+            settingData = extractDataFromText(div);
+            cleanData = settingData;
+        } else {
+            continue;
+        }
+        data.push({
+            "name": div.dataset.name,
+            "data": cleanData
+        });
+    }
+    console.log(cleanData);
+    return data;
+}
+
+function extractDataFromBool(div) {
+    return;
+}
+function extractDataFromDropdown(div) {
+    return;
+}
+function extractDataFromText(div) {
+    return;
+}
+
+function extractDataFromTable(div) {
+    var data = [];
+    var table = div.getElementsByTagName("table")[0];
+    var headers = table.getElementsByTagName("th");
+    var rows = table.getElementsByTagName("tr");
+    for(var i = 0; i < rows.length; i++){
+        var cells = rows[i].getElementsByTagName("input");
+        data.push({});
+        for(var j = 0; j < cells.length; j++){
+            data[i][headers[j].innerText] = cells[j].value;
+        }
+        console.log(data)
+    }
+    return data;
+}
+
+//removes table rows that match existing table rows
+function removeDuplicateDataFromTableExtract(extractedTableData, existingSettings) {
+    var existingSettingsTableLength;
+    var validData = []
+    existingSettings.data.forEach(x => {
         if(x.type === "table") {
-            const tableName = x.displayName ? x.displayName : x.name
-            for(var i = 0; i < x.data.Length ; i++){
-                keys.push(`${tableName}_${}`);
-            }
+            existingSettingsTableLength = x.data.length;
         }
     })
-}*/
+    const amountToSend = extractedTableData.length - existingSettingsTableLength - 1;
+    if(amountToSend < 0 || amountToSend > extractedTableData.length) {
+        console.log("Not Implemented");
+        return;
+    }
+    for (let i = 0; i < amountToSend; i++) {
+        validData.push(extractedTableData[i]);
+    }
+    return validData;
+}
 
+//captures save-button
+async function saveSettings() {
+    var moduleName = getSelectedModuleName();
+    var postData = await createPostData();
+    await doPostRequest(moduleName, postData);
+    //reload page with new settings
+}
+
+//performs the actual post request
 async function doPostRequest(moduleName, postData) {
     const response = await fetch(`api/settings/${moduleName}`, {
         method: "POST", 
         headers: {
-            'Accept': 'application/json',
             "Content-Type": "application/json",
         },
-        redirect: "manual", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(data), // body data type must match "Content-Type" header
+        body: JSON.stringify(postData)
     });
-    return response.ok; // parses JSON response into native JavaScript objects
+    return response.ok;
 }

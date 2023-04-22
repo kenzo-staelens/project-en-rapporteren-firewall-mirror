@@ -41,10 +41,14 @@
     padding: 2rem 4rem 1rem 4rem;
 }
 
+#moduleSettings {
+    max-width: 70vw;
+}
+
 #moduleSettings header {
-  width: 80%;
-  margin: 0 auto;
-  margin-bottom: 2rem;
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 2rem;
 }
 
 #moduleSettings footer button {
