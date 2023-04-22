@@ -4,8 +4,11 @@ from scapy.all import IP
 from multiprocessing import Process
 from time import sleep
 import Backend.moduleloader as moduleloader
+import Backend.modules.Helper.ipparser
 
 config_object = [None] #for "pointer" purposes, concurrency in python suckt
+INTERNAL = "192.0.0.0"
+INTERNAL_MASK "0.255.255.255"
 
 def logger(direction, src, dst, name, pname, secpname, extra=""):
     if(config_object[0]["logging"]):
@@ -24,7 +27,8 @@ def firewallChannel(direction):
                 if not config_object[0]["L3_modules"][module][1]:
                     #guard clause, module is marked disabled
                     continue
-                accepted = config_object[0]["L3_modules"][module][0].run(direction, sca)
+                direct = ipparser.getDirection(pkt.dst, INTERNAL, INTERNAL_MASK)
+                accepted = config_object[0]["L3_modules"][module][0].run(direct, sca)
                 if(not accepted):
                     pkt.drop()
                     break

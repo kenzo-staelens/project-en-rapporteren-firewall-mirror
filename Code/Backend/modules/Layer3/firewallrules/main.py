@@ -19,8 +19,8 @@ def config(jsonconfig):
 
 def addEntry(allow, priority, direction, src, src_mask, dst, dst_mask, port_start, port_end, protocol):
 	query = "insert into firewallrules(allow, priority, direction,src_ip,src_mask,dst_ip,dst_mask,protocol, port_start, port_end) values(?,?,?,?,?,?,?,?,?,?)"
-	params = (allow, priority, direction, ipparser.parse_to_int(src),
-	ipparser.parse_to_int(src_mask), ipparser.parse_to_int(dst), ipparser.parse_to_int(dst_mask), protocol, port_start, port_end)
+	params = (allow, priority, direction, ipparser.mask_ip(src, src_mask),
+	ipparser.parse_to_int(src_mask), ipparser.mask_ip(dst, dst_mask), ipparser.parse_to_int(dst_mask), protocol, port_start, port_end)
 	try:
 		con().execute(query,params)
 	except:#threading issues

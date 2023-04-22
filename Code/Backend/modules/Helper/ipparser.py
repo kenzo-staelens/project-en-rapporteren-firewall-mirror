@@ -24,6 +24,11 @@ def parse_to_quad(value):
 def mask_ip(ip, mask):
     return parse_to_int(ip)&invert_bits_32(mask)
 
+def getDirection(dst, ipRange, mask):
+    if mask_ip(dst,mask)==mask_ip(ipRange,mask):
+       return "ingress"
+    return "egress" 
+
 #converts mask to and-able format
 def invert_bits_32(value):
     mask = parse_to_int(value)
