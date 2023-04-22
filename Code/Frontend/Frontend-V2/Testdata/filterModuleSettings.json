@@ -17,20 +17,22 @@
             "type": "table",
             "data": [
                 {
+                    "priority": "65000",
                     "behavior": "allow",
                     "source-IP": "any",
                     "source-port": "any",
                     "destination-IP": "192.168.1.1",
                     "destination-port": "443",
-                    "protocol": "HTTP-GET"
+                    "protocol": "TCP"
                 },
                 {
+                    "priority": "64999",
                     "behavior": "allow",
                     "source-IP": "192.168.1.1",
                     "source-port": "443",
                     "destination-IP": "192.168.1.1",
                     "destination-port": "any",
-                    "protocol": "HTTP-POST"
+                    "protocol": "TCP"
                 }
             ]
         }

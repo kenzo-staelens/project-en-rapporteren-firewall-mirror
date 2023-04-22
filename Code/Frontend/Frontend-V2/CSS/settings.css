@@ -32,14 +32,24 @@
 }
 
 
-.settingsContainer .moduleSettings {
+.settingsContainer #moduleSettings {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background-color: var(--accent-color);
     flex-grow: 4;
-    padding-left: 4rem;
-    padding-top: 2rem;
+    padding: 2rem 4rem 1rem 4rem;
+}
+
+#moduleSettings header {
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+
+#moduleSettings footer button {
+    float: right;
+    margin-right: 10rem;
 }
 
 table {
@@ -238,20 +248,23 @@ td:not(:last-of-type) {
 }
 
 .toggleButton .knobs span {
-    width: 25px;
-    left: 40px;
-    background-color: #03a9f4;
+    left: 4px;
+    background-color: #f44336;
     z-index: 2;
 }
 
 .toggleButton .checkbox:checked + .knobs span {
-    left: 4px;
-    background-color: #f44336;
+
+    width: 25px;
+    left: 40px;
+    background-color: #03a9f4;
+
 }
 
 .toggleButton .checkbox:checked ~ .layer {
-    background-color: #fac3c3;
+    background-color: var(--button-color);
 }
 .toggleButton .checkbox ~ .layer {
-    background-color: var(--button-color);
-}
+    background-color: #fac3c3;
+}
+

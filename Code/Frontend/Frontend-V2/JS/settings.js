@@ -18,7 +18,8 @@ async function fillModulesList() {
 async function getNames(resource) {
     var names = [];
     try {
-        const response = await fetch(`../../Testdata/${resource}.json`)
+        const response = await fetch(`../Testdata/${resource}.json`)
+        if(!response.ok) throw "nameList not found"
         const json = await response.json()
         json.data.forEach(item => {
             names.push( 
@@ -55,7 +56,7 @@ function getSelectedModuleName() {
 async function getModuleFromServer(moduleName) {
 	//Get request for specific module
     try {
-        const response = await fetch(`../../Testdata/${moduleName}ModuleSettings.json`)
+        const response = await fetch(`../Testdata/${moduleName}ModuleSettings.json`)
         if(response.status !== 200) {
             console.error("error retrieving data: " + error);
             response = `{ "name" : "error ${response.status} \nThere was a problem retrieving the data"}`;
@@ -70,10 +71,10 @@ async function getModuleFromServer(moduleName) {
 
 async function fillModuleSettings(moduleName) {
     var selectedModule = await getModuleFromServer(moduleName);
-    var settingsForm = document.getElementById("moduleSettingsForm");
+    var settingsForm = document.getElementById("moduleSettings");
     settingsForm.innerHTML = "";
 
-    var header = document.createElement("div");
+    var header = document.createElement("header");
     header.innerHTML = 
     `<h2>${selectedModule.displayName}</h2>
 `;
@@ -84,6 +85,12 @@ async function fillModuleSettings(moduleName) {
     moduleSettings.forEach(setting => {
         createSettingDiv(setting, settingsForm);
     });
+
+    var footer = document.createElement("footer")
+    footer.innerHTML =
+    `<button class="bigButton" type="button" onclick=createPostData()>Save</button>
+`;
+    settingsForm.appendChild(footer);
 }
 
 function createSettingDiv(setting, parent) {
@@ -101,6 +108,7 @@ function createSettingDiv(setting, parent) {
             break;
         case "text":
             settingDiv.appendChild(createTextSettingDiv(setting));
+            break;
         default:
             console.log("unrecognized type: " + setting.type);
             break;
@@ -130,7 +138,7 @@ function createBoolSettingDiv(setting) {
     var boolSetting = document.createElement("div");
     boolSetting.setAttribute("class", "toggleButton")
     boolSetting.innerHTML = 
-`<input type="checkbox" class="checkbox" name="${setting.name}" />
+`<input type="checkbox" class="checkbox" name="${setting.name}" checked=${setting.data}/>
     <div class="knobs">
         <span></span>
     </div>
@@ -143,6 +151,8 @@ function createTableSettingDiv(setting) {
     const columns = Object.keys(setting.data[0])
     tableDivInnerHTML = 
 `<table id="${setting.name}">
+    <button type="button" class="button_plus" onclick="addRowButton(this)"></button>
+    <button type="button" class="button_plus minus" onclick="removeRowButton(this)"></button>
     <thead>
         <tr>
 `;
@@ -175,8 +185,6 @@ function createTableSettingDiv(setting) {
     tableDivInnerHTML += 
 `   </tbody>
 </table>
-<button type="button" class="button_plus" onclick="addRowButton(this)"></button>
-<button type="button" class="button_plus minus" onclick="removeRowButton(this)"></button>
 `;
     tableDiv.innerHTML = tableDivInnerHTML;
     return tableDiv;
@@ -218,7 +226,7 @@ function addRowButton(caller) {
 `;
     }
 	newInputRow.innerHTML = newInputRowInnerHTML;
-	table.appendChild(newInputRow);
+	table.prepend(newInputRow);
 	console.log(`added row`);
 }
 
@@ -231,8 +239,43 @@ function removeRowButton(caller) {
     rows.item(rows.length - 1).remove();
 }
 
+async function createPostData() {
+    var rawFormData = new FormData(document.getElementById("moduleSettings"));
+    console.log(rawFormData);
+    const existingSettings = await getModuleFromServer(getSelectedModuleName())
+    console.log(existingSettings);
+    //var existingKeys = getKeysFromSettings(existingSettings);
+    //console.log(existingKeys)
+    var formData = {};
+    rawFormData.forEach(entry => {
+        //convert to good JSON
+        
+    })
 
-function createPostRequest() {
-    const settingsForm = document.getElementById("moduleSettingsForm");
-    var postRequestContent = "";
+}
+
+/*function getKeysFromSettings(settings) {
+    settings.data.forEach(x => {
+        var keys = [];
+        if(x.type === "table") {
+            const tableName = x.displayName ? x.displayName : x.name
+            for(var i = 0; i < x.data.Length ; i++){
+                keys.push(`${tableName}_${}`);
+            }
+        }
+    })
+}*/
+
+async function doPostRequest(moduleName, postData) {
+    const response = await fetch(`api/settings/${moduleName}`, {
+        method: "POST", 
+        headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json",
+        },
+        redirect: "manual", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    return response.ok; // parses JSON response into native JavaScript objects
 }

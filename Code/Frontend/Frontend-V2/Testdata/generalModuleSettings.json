@@ -20,31 +20,6 @@
             "desc": "Specifies the folder where the logs are stored",
             "type": "text",
             "data": "./Logs"
-        },
-        {
-            "name": "filterTable",
-            "displayName" : "Geo-Filter Table",
-            "type": "table",
-            "data": [
-                {
-                    "behavior": "deny",
-                    "source-country": "RU",
-                    "source-region": "any",
-                    "source-port": "any",
-                    "destination-IP": "any",
-                    "destination-port": "any",
-                    "Remark": "Russo-ukranian war"
-                },
-                {
-                    "behavior": "deny",
-                    "source-country": "KP",
-                    "source-region": "any",
-                    "source-port": "any",
-                    "destination-IP": "any",
-                    "destination-port": "any",
-                    "Remark": "Recent attacks on network"
-                }
-            ]
         }
     ]
 }
