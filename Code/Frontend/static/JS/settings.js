@@ -12,7 +12,7 @@ async function fillModulesList() {
         moduleToAdd.innerText = element.displayName ? element.displayName : element.name;
 		moduleList.appendChild(moduleToAdd);
 	});
-	console.log('filled modules: ' + JSON.stringify(moduleNames));
+	//console.log('filled modules: ' + JSON.stringify(moduleNames));
 }
 
 async function getNames(resource) {
@@ -40,7 +40,7 @@ function switchSelectedModule(clickedElement) {
     }
 	clickedElement.classList.add('active');
     fillModuleSettings(getSelectedModuleName());
-	console.log('switched active module to: ' + clickedElement.id);
+	//console.log('switched active module to: ' + clickedElement.id);
 }
 
 //Determines the module that the user selected
@@ -73,7 +73,7 @@ async function fillModuleSettings(moduleName) {
     var settingsForm = document.getElementById("moduleSettings");
     settingsForm.innerHTML = "";
 
-    var header = document.createElement("div");
+    var header = document.createElement("header");
     header.innerHTML = 
     `<h2>${selectedModule.displayName}</h2>`;
     settingsForm.appendChild(header);
@@ -84,6 +84,12 @@ async function fillModuleSettings(moduleName) {
         createSettingDiv(setting, settingsForm);
         
     });
+    
+    var footer = document.createElement("footer")
+    footer.innerHTML =
+    `<button class="bigButton" type="button" onclick=saveSettings()>Save</button>`;
+    settingsForm.appendChild(footer);
+
 }
 
 function createSettingDiv(setting, parent) {
@@ -101,6 +107,7 @@ function createSettingDiv(setting, parent) {
             break;
         case "text":
             settingDiv.appendChild(createTextSettingDiv(setting));
+            break;
         default:
             console.log("unrecognized type: " + setting.type);
             break;
@@ -111,7 +118,9 @@ function createSettingDiv(setting, parent) {
 //creates the containing div and title+description of a setting
 function createEmptySetting(setting) {
     var settingDiv = document.createElement("div");
-    settingDiv.setAttribute("class", setting.name + "Setting");
+    settingDiv.setAttribute("class", `${setting.type}`);
+    settingDiv.setAttribute("data-name", setting.name)
+
     
     var label = document.createElement("h3");
     label.innerText = setting.displayName ? setting.displayName : setting.name;
@@ -130,7 +139,7 @@ function createBoolSettingDiv(setting) {
     var boolSetting = document.createElement("div");
     boolSetting.setAttribute("class", "toggleButton")
     boolSetting.innerHTML = 
-`<input type="checkbox" class="checkbox" name="${setting.name}" />
+`<input type="checkbox" class="checkbox" name="${setting.name}" checked=${setting.data}/>
     <div class="knobs">
         <span></span>
     </div>
@@ -143,6 +152,9 @@ function createTableSettingDiv(setting) {
     const columns = Object.keys(setting.data[0])
     tableDivInnerHTML = 
 `<table id="${setting.name}">
+    <button type="button" class="button_plus" onclick="addRowButton(this)"></button>
+    <button type="button" class="button_plus minus" onclick="removeRowButton(this)"></button>
+
     <thead>
         <tr>
 `;
@@ -162,9 +174,9 @@ function createTableSettingDiv(setting) {
 `       <tr>
 `;
         columns.forEach(column => {
-            tablerow += 
-`            <td><input type="text" name="${setting.name}_${rowIndex}_${column}" value="${row[column]}" /></td>
-`;
+            /**tablerow += 
+            `<td><input type="text" name="${setting.name}_${rowIndex}_${column}" value="${row[column]}" /></td>`;*/
+            tablerow += `<td><input type="text" name="${setting.name}_1_${column}" value="${row[column]}" /></td>`
         });
         tablerow += 
 `       </tr>
@@ -175,8 +187,6 @@ function createTableSettingDiv(setting) {
     tableDivInnerHTML += 
 `   </tbody>
 </table>
-<button type="button" class="button_plus" onclick="addRowButton(this)"></button>
-<button type="button" class="button_plus minus" onclick="removeRowButton(this)"></button>
 `;
     tableDiv.innerHTML = tableDivInnerHTML;
     return tableDiv;
@@ -218,8 +228,8 @@ function addRowButton(caller) {
 `;
     }
 	newInputRow.innerHTML = newInputRowInnerHTML;
-	table.appendChild(newInputRow);
-	console.log(`added row`);
+	table.prepend(newInputRow);
+	//console.log(`added row`);
 }
 
 function removeRowButton(caller) {
@@ -231,8 +241,108 @@ function removeRowButton(caller) {
     rows.item(rows.length - 1).remove();
 }
 
+async function createPostData() {
+    const existingSettings = await getModuleFromServer(getSelectedModuleName())
+    //console.log(existingSettings);
+    var cleanData = extractData(document.getElementById("moduleSettings"), existingSettings);
+    return cleanData;
+}
 
-function createPostRequest() {
-    const settingsForm = document.getElementById("moduleSettings");
-    var postRequestContent = "";
-}
+//extracts the data from the form and removes settings that occur in the second param
+function extractData(form, existingSettings) {
+    const divs = form.getElementsByTagName("div");
+    var data = []; 
+    for(var i = 0; i < divs.length; i++){
+        var settingData;
+        var div = divs[i];
+        if(div.classList.contains("bool")) {
+            settingData = extractDataFromBool(div);
+            cleanData = settingData;
+        } else if(div.classList.contains("dropdown")) {
+            settingData = extractDataFromDropdown(div);
+            cleanData = settingData;
+        } else if(div.classList.contains("table")) {
+            settingData = extractDataFromTable(div);
+            cleanData = removeDuplicateDataFromTableExtract(settingData, existingSettings);
+        } else if(div.classList.contains("text")) {
+            settingData = extractDataFromText(div);
+            cleanData = settingData;
+        } else {
+            continue;
+        }
+        data.push({
+            "name": div.dataset.name,
+            "data": cleanData
+        });
+    }
+    //console.log(cleanData);
+    return data;
+}
+
+function extractDataFromBool(div) {
+    return;
+}
+function extractDataFromDropdown(div) {
+    return;
+}
+function extractDataFromText(div) {
+    return;
+}
+
+async function saveSettings() {
+    var moduleName = getSelectedModuleName();
+    var postData = await createPostData();
+    await doPostRequest(moduleName, postData);
+    //reload page with new settings
+}
+
+function extractDataFromTable(div) {
+    var data = [];
+    var table = div.getElementsByTagName("table")[0];
+    var headers = table.getElementsByTagName("th");
+    var rows = table.getElementsByTagName("tr");
+    for(var i = 0; i < rows.length; i++){
+        var cells = rows[i].getElementsByTagName("input");
+        data.push({});
+        for(var j = 0; j < cells.length; j++){
+            data[i][headers[j].innerText] = cells[j].value;
+        }
+        //console.log(data)
+    }
+    return data;
+}
+
+//removes table rows that match existing table rows
+function removeDuplicateDataFromTableExtract(extractedTableData, existingSettings) {
+    var existingSettingsTableLength;
+    var validData = []
+    existingSettings.data.forEach(x => {
+        if(x.type === "table") {
+            existingSettingsTableLength = x.data.length;
+        }
+    })
+
+    const amountToSend = extractedTableData.length - existingSettingsTableLength - 1;
+    if(amountToSend < 0 || amountToSend > extractedTableData.length) {
+        console.log("Not Implemented");
+        return;
+    }
+    for (let i = 0; i < amountToSend; i++) {
+        validData.push(extractedTableData[i]);
+    }
+    return validData;
+}
+
+async function doPostRequest(moduleName, postData) {
+    var temp = {"apitoken":apitoken};
+    const response = await fetch(`api/settings/${moduleName}`, {
+        method: "POST", 
+        headers: {
+            "Content-Type": "application/json",
+        },
+        //body: JSON.stringify(postData)
+        body: JSON.stringify({...{"postdata":postData},...temp}), // body data type must match "Content-Type" header
+    });
+    return response.ok; // parses JSON response into native JavaScript objects
+}
+

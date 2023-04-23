@@ -8,7 +8,7 @@ import Backend.modules.Helper.ipparser
 
 config_object = [None] #for "pointer" purposes, concurrency in python suckt
 INTERNAL = "192.0.0.0"
-INTERNAL_MASK "0.255.255.255"
+INTERNAL_MASK = "0.255.255.255"
 
 def logger(direction, src, dst, name, pname, secpname, extra=""):
     if(config_object[0]["logging"]):

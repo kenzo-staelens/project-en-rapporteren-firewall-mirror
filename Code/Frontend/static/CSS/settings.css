@@ -9,7 +9,7 @@
 .settingsContainer>#moduleList {
     display: flex;
     flex-direction: column;
-    align-items: end;
+    /*align-items: end;*/
     margin-top: 0rem;
     padding-top: 2rem;
     padding-right: 1rem;
@@ -254,4 +254,5 @@ td:not(:last-of-type) {
 }
 .toggleButton .checkbox ~ .layer {
     background-color: var(--button-color);
-}
+}
+

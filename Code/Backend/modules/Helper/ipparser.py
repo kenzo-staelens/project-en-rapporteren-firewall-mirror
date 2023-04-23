@@ -29,6 +29,14 @@ def getDirection(dst, ipRange, mask):
        return "ingress"
     return "egress" 
 
+def verifyQuads(*args):
+    for arg in args:
+        try:
+            parse_to_int(arg)
+        except:
+            return False
+    return True
+
 #converts mask to and-able format
 def invert_bits_32(value):
     mask = parse_to_int(value)

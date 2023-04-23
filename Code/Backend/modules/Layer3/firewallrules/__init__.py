@@ -1,2 +1,2 @@
 #!/usr/bin/python
-from .main import run, config, getconfig
+from .main import run, config, getconfig, postconfig

@@ -61,7 +61,7 @@ def login():
         elif Token!=token:
             return render_template("unauthorized.html")
         else:
-            return redirect(url_for(f"dashboard",token=token))
+            return redirect(url_for(f"home",token=token))
             #return render_template("dashboard.html",apitoken=config_object[0]["apikey"])
 
 
@@ -96,7 +96,7 @@ def settings():
     elif Token!=token:
         return redirect(url_for("unauthorized"), code=302)
     else:
-        return render_template("settings.html", logintoken=token)
+        return render_template("settings.html", logintoken=token, apitoken=config_object[0]["apikey"])
     
 @app.get("/traffic")
 def traffic():
@@ -118,21 +118,27 @@ def unauthorized():
 #400 bad request -> values not valid
 #401: unauthorized -> invalid auth token
 #500: internal server error -> something else failed
-def ProcessTheData(jsonData):
+def ProcessTheData(jsonData, module):
     #global apitoken
     try:
         if(jsonData['apitoken']!=config_object[0]["apikey"]):
             return 401
         #process here
-        return 200
-    except:
+        addedRules = jsonData["postdata"][0]["data"]
+        modulename = module[3:]
+        layer = f"{module[:2]}_modules"
+        
+        #returns status code
+        return config_object[0][layer][modulename][0].postconfig(addedRules)
+    except Exception as e:
+        print("    ",end="")
+        print(e)   
         return 500
     
-@app.post("/api")
-def api():
-    httpStatus = ProcessTheData(request.json) 
-    print("json: ", request.json)
-    print("token: ", config_object[0]["apikey"])
+@app.post("/api/settings/<module>")
+def api(module):
+    httpStatus = ProcessTheData(request.json, module) 
+    #print("json: ", request.json)
     if(httpStatus == 200):
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     else:
@@ -173,7 +179,7 @@ def apigetsettings(module):
     layer = f"{module[:2]}_modules"
     table = config_object[0][layer][modulename][0].getconfig()
     retobj = {"name":"module", "displayName":modulename,"data":[
-            {"name":"Enable", "desc":"enables module", "type":"bool","data":True}
+            #{"name":"Enable", "desc":"enables module", "type":"bool","data":True}
         ]
     }
     if len(table)>0:
