@@ -3,65 +3,40 @@ from netfilterqueue import NetfilterQueue
 from scapy.all import IP
 from multiprocessing import Process
 from time import sleep
-from json import load
+import Backend.moduleloader as moduleloader
+import Backend.modules.Helper.ipparser
 
-#import configs
-try:
-    with open("../../VM/Config/config.json","r") as f:
-        fdata = load(f)
-        if("logging" in fdata):
-            logging=(fdata["logging"]=="True")
-        else:
-            logging=False
-        if("logfile" in fdata):
-            logfile=fdata["logfile"]
-        else:
-            logfile="./logfile.log"
-except FileNotFoundError:
-    print("file config.json found, using default settings")
-    logging = False
-
-'''
-try:
-    y = None
-    with open("firewallrules.json","r") as f:
-        y = json.load(f)
-except FileNotFoundError:
-    print("firewallrules.json not found")
-    ListOfBannedIpAddr = []
-    ListOfBannedPorts = []
-    ListOfBannedPrefixes = []
-    TimeThreshold = 10 #sec
-    PacketThreshold = 100
-    BlockPingAttacks = True
-'''
+config_object = [None] #for "pointer" purposes, concurrency in python suckt
+INTERNAL = "192.0.0.0"
+INTERNAL_MASK = "0.255.255.255"
 
 def logger(direction, src, dst, name, pname, secpname, extra=""):
-    if(logging):
-        with open(logfile,"a") as f:
+    if(config_object[0]["logging"]):
+        with open(config_object[0]["logfile"],"a") as f:
             f.write("{: >3} {: >15} -> {: >15}: {} {} {} {}\n".format(direction, src, dst, name, pname, secpname, extra))
     else:
         print("{: >3} {: >15} -> {: >15}: {} {} {}".format(direction, src, dst, name, pname, secpname))
 
-def firewallIn(pkt):
-    #convert to scapy packet without ethernet frame
-    sca = IP(pkt.get_payload())#scapy.layers.inet
-    logger("in", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
-    print(sca.payload.payload)
-    pkt.accept()
-
-def firewallOut(pkt):
-    #convert to scapy packet without ethernet frame
-    sca = IP(pkt.get_payload())#scapy.layers.inet
-    logger("out", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
-    print(sca.payload.payload)
-    pkt.accept()
-
-def firewallFwd(pkt):
-    #convert to scapy packet without ethernet frame
-    sca = IP(pkt.get_payload())#scapy.layers.inet
-    logger("fwd", sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
-    pkt.accept()
+def firewallChannel(direction):
+    def channel(pkt):
+        try:
+            sca = IP(pkt.get_payload())#scapy.layers.inet
+            logger(direction, sca.src, sca.dst, sca.name, sca.payload.name, sca.payload.payload.name)
+            #
+            for module in config_object[0]["L3_modules"]: #for key in dictionary
+                if not config_object[0]["L3_modules"][module][1]:
+                    #guard clause, module is marked disabled
+                    continue
+                direct = ipparser.getDirection(pkt.dst, INTERNAL, INTERNAL_MASK)
+                accepted = config_object[0]["L3_modules"][module][0].run(direct, sca)
+                if(not accepted):
+                    pkt.drop()
+                    break
+            pkt.accept()
+        except Exception as e:
+            print(e)
+    
+    return channel
 
 def threadStart(queue, func):
     print("starting queue {}".format(queue))
@@ -73,8 +48,10 @@ def threadStart(queue, func):
         print("nfqueue {} stopped".format(queue))
         nfqueue.unbind()
 
-def main():
-    processes = [(1,firewallIn),(2,firewallOut),(3,firewallFwd)]
+def main(config):
+    config_object[0] = config
+    
+    processes = [(1,firewallChannel("in")),(2,firewallChannel("out")),(3,firewallChannel("fwd"))]
     
     for process in processes:
         proc = Process(target=threadStart, args=process)
@@ -90,4 +67,4 @@ def main():
     print("end of firewall process")
 
 if __name__=="__main__":
-    main()
+    main(None)

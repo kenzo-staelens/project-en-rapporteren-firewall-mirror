@@ -1,4 +1,10 @@
 {
-  "logging":"False",
-  "logfile":"../Logs/firewall.log"
+  "logging":"True",
+  "logfile":"../VM/Logs/firewall.log",
+  "ignored_modules":{
+  	"Layer3":["example_module","__pycache__"],
+  	"Layer4":["__pycache__"]
+  },
+  "firewall_module_path":"Backend/modules/Layer3/firewallrules",
+  "apikey":"259355acc5f86bbd0f9a9f708209a15595cafcecd8fb79c00b061d3456f64ba8"
 }

@@ -1,0 +1,36 @@
+{
+    "name" : "geoFilter",
+    "displayName" : "Geo-Filter",
+    "data" : [
+        {
+            "name": "Enable",
+            "type": "bool",
+            "data": true
+        },
+        {
+            "name": "filterTable",
+            "displayName" : "Geo-Filter Table",
+            "type": "table",
+            "data": [
+                {
+                    "behavior": "deny",
+                    "source-country": "RU",
+                    "source-region": "any",
+                    "source-port": "any",
+                    "destination-IP": "any",
+                    "destination-port": "any",
+                    "Remark": "Russo-ukranian war"
+                },
+                {
+                    "behavior": "deny",
+                    "source-country": "KP",
+                    "source-region": "any",
+                    "source-port": "any",
+                    "destination-IP": "any",
+                    "destination-port": "any",
+                    "Remark": "Recent attacks on network"
+                }
+            ]
+        }
+    ]
+}

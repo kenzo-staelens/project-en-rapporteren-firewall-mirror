@@ -1,0 +1,50 @@
+{
+    "name" : "general",
+    "displayName" : "General Settings",
+    "data" : [
+        {
+            "name": "Enable",
+            "desc": "This enables the firewall",
+            "type": "bool",
+            "data": true
+        },
+
+        {
+            "name": "Default behaviour",
+            "type": "dropdown",
+            "data": ["allow","deny"]
+        },
+        {
+            "name": "logFolder",
+            "displayName": "Log folder location",
+            "desc": "Specifies the folder where the logs are stored",
+            "type": "text",
+            "data": "./Logs"
+        },
+        {
+            "name": "filterTable",
+            "displayName" : "Geo-Filter Table",
+            "type": "table",
+            "data": [
+                {
+                    "behavior": "deny",
+                    "source-country": "RU",
+                    "source-region": "any",
+                    "source-port": "any",
+                    "destination-IP": "any",
+                    "destination-port": "any",
+                    "Remark": "Russo-ukranian war"
+                },
+                {
+                    "behavior": "deny",
+                    "source-country": "KP",
+                    "source-region": "any",
+                    "source-port": "any",
+                    "destination-IP": "any",
+                    "destination-port": "any",
+                    "Remark": "Recent attacks on network"
+                }
+            ]
+        }
+    ]
+}
