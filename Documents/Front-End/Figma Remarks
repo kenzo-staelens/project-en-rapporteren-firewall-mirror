@@ -1,7 +1,0 @@
-https://www.figma.com/file/9cMeBzz5Z4thiJRbWzHK5Y/Firewall?node-id=0%3A1&t=C63eSFfzmENcthEG-1
-
-Remarks:
-op vlak van user account (settings) zit daar momenteel niet veel in de database(enkel naam en password) ik denk niet dat hier een wachtwoord change functie nodig is (geef gerust commentaar moest je vinden dat dit toch wel moet)
-
-is het mogelijk om in plaats van in settings te zeggen: "deze soorten pakketten worden bekeken" om te zeggen welke modules worden ingeladen (eg: nu is dat de firewall regels zelf en packet inspection voor icmp, dns, etc) type paketten kan namelijk rechtstreeks in regels worden ingevoerd (daar kan mogelijks wel nog een checkbox staan om de regel te negeren moest je dit willen)
-    - Kenzo
