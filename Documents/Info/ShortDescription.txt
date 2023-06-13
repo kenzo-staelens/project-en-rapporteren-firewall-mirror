@@ -1,0 +1,1 @@
+Een project over hoe een firewall werkt om beter inzicht te vergaren in deze materie. We kozen deze modulair op te bouwen voor verdere ontwikkeling. De kennis die we vergaarden, zullen we verder gebruiken in onze opleiding.
